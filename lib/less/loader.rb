@@ -236,7 +236,7 @@ module Less
         begin
           uri = URI(options[:uri])
           response = Net::HTTP.get_response(uri)
-          callback.call(nil, { statusCode: response.code.to_i }, response.body)
+          callback.call(nil, { :statusCode => response.code.to_i }, response.body)
         rescue => e
           err = e.message
         ensure
