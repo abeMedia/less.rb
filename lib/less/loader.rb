@@ -22,6 +22,7 @@ module Less
       @environment.native('fs', FS)
       @environment.native('url', Url)
       @environment.native('http', Http)
+      @environment.native('request', Request)
     end
 
     def require(module_id)
@@ -227,6 +228,22 @@ module Less
         end
       end
 
+    end
+
+    module Request # :nodoc:
+      def self.get(options, callback)
+        err = nil
+        begin
+          uri = URI(options[:uri])
+          response = Net::HTTP.get_response(uri)
+          callback.call(nil, { statusCode: response.code.to_i }, response.body)
+        rescue => e
+          err = e.message
+        ensure
+          ret = Http::HttpGetResult.new(err)
+        end
+        ret
+      end
     end
 
   end
